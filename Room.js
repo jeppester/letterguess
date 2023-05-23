@@ -14,22 +14,13 @@ export default class Room extends ViewList {
     this.push(this.letter1, this.letter2, this.letter3)
 
     this.resizeLetters(gameContext)
-
-    gameContext.animator.push({
-      object: this.letter1.scale,
-      values: {
-        x: { to: 2 },
-        y: { to: 1.5 }
-      },
-      ease: gameContext.animator.easeInOutSine,
-      duration: 1000
-    })
   }
 
   handleEvent({ gameContext, event }) {
     if (event.type == "resize") {
       this.resizeLetters(gameContext)
     }
+    super.handleEvent({ gameContext, event })
   }
 
   resizeLetters(gameContext) {

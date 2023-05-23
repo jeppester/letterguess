@@ -6,9 +6,11 @@ export default class View {
     this.opacity = 1
     this.offset = { x: 0, y: 0}
     this.scale = { x: 1, y: 1 }
+    this.currentTransform = null
   }
 
-  draw(ctx, drawWithTransform) {
+  draw(gameContext, drawWithTransform) {
+    const { ctx } = gameContext
     ctx.save()
 
     ctx.translate(this.x, this.y)
@@ -16,7 +18,9 @@ export default class View {
     ctx.scale(this.scale.x, this.scale.y);
     ctx.translate(-this.offset.x, -this.offset.y)
 
-    drawWithTransform(ctx)
+    this.currentTransform = ctx.getTransform();
+
+    drawWithTransform()
 
     ctx.restore()
   }

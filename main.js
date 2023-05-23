@@ -41,7 +41,10 @@ const handleEvent = (event) => {
   mainViewList.handleEvent({ gameContext, event })
 }
 
-['click', 'resize'].forEach(name => {
+;['pointerdown', 'pointerup', 'pointermove', 'pointerout', 'pointercancel'].forEach(name => {
+  canvas.addEventListener(name, handleEvent)
+})
+;['resize'].forEach(name => {
   addEventListener(name, handleEvent)
 })
 
