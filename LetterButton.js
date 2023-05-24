@@ -1,17 +1,18 @@
 import Clickable from './Clickable.js'
 
-export default class Letter extends Clickable {
-  constructor(letter) {
+export default class LetterButton extends Clickable {
+  constructor({ letter, onClick }) {
     super()
 
     this.rotation = 0
     this.size = 0
     this.letter = letter
+    this.onClick = onClick
   }
 
   setFont(ctx) {
     ctx.textAlign = 'center'
-    ctx.font = `${this.size}px Arial`;
+    ctx.font = `${this.size * .9}px Arial`;
   }
 
   updateTextOffset({ ctx }) {
@@ -53,6 +54,6 @@ export default class Letter extends Clickable {
   }
 
   handleClick() {
-    console.log('Letter clicked!', this.letter)
+    this.onClick(this)
   }
 }

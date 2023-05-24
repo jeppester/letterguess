@@ -1,8 +1,14 @@
+import AnimationBuilder from './AnimationBuilder.js'
+
 export default class Animator extends Array {
   constructor(startTime) {
     super()
 
     this.time = startTime
+  }
+
+  animate(target) {
+    return new AnimationBuilder(this, target)
   }
 
   easeLinear(t) {

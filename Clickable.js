@@ -30,8 +30,7 @@ export default class Clickable extends View {
   }
 
   handlePointerDown(gameContext, event) {
-    console.log(this.letter, event.pointerId)
-    if (this.clickInProgress) return
+    if (this.clickInProgress || this.disabled) return
 
     const { ctx } = gameContext
     const boundingBox = new Path2D()
@@ -67,8 +66,6 @@ export default class Clickable extends View {
   }
 
   handlePointerUp(gameContext, event) {
-    console.log(this.letter, event.pointerId, this.pointerId, this.clickInProgress)
-
     if (!this.clickInProgress) return
     if (event.pointerId !== this.pointerId) return
 
