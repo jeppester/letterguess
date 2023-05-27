@@ -1,3 +1,11 @@
+function joinCallbacks(...callbacks) {
+  return () => {
+    return callbacks.reduce((chain, callback) => {
+      return callback ? chain.then(callback) : chain
+    }, Promise.resolve())
+  }
+}
+
 export default class AnimationBuilder {
   constructor(animator, target) {
     this.animator = animator
@@ -5,12 +13,22 @@ export default class AnimationBuilder {
     this.tweens = []
   }
 
-  tween(values, duration = 200, ease) {
+  tween(values, duration = 200, ease, callback) {
     this.tweens.push({
       object: this.target,
       values,
       duration,
-      ease
+      ease,
+      callback
+    })
+
+    return this
+  }
+
+  wait(duration, callback) {
+    this.tweens.push({
+      duration,
+      callback
     })
 
     return this
@@ -19,13 +37,13 @@ export default class AnimationBuilder {
   start(callback) {
     this.tweens.forEach((tween, index) => {
       if (index === this.tweens.length - 1) {
-        tween.callback = callback
+        tween.callback = joinCallbacks(tween.callback, callback)
       }
       else {
         const nextTween = this.tweens[index + 1]
-        tween.callback = () => {
+        tween.callback = joinCallbacks(tween.callback, () => {
           this.animator.push(nextTween)
-        }
+        })
       }
     })
 

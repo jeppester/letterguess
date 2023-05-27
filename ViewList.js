@@ -5,8 +5,10 @@ export default class ViewList extends Array {
     this.x = 0
     this.y = 0
     this.rotation = 0
-    this.offset = { x: 0, y: 0}
-    this.scale = { x: 1, y: 1 }
+    this.originX = 0
+    this.originY = 0
+    this.scaleX = 1
+    this.scaleY = 1
   }
 
   handleEvent(event) {
@@ -26,8 +28,8 @@ export default class ViewList extends Array {
 
     ctx.translate(this.x, this.y)
     ctx.rotate(this.rotation / 180 * Math.PI)
-    ctx.scale(this.scale.x, this.scale.y);
-    ctx.translate(-this.offset.x, -this.offset.y)
+    ctx.scale(this.scaleX, this.scaleY);
+    ctx.translate(-this.originX, -this.originY)
 
     this.forEach((child) => {
       child.draw?.call(child, { ctx })

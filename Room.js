@@ -19,6 +19,21 @@ export default class Room extends ViewList {
 
     this.push(...this.letterButtons)
     this.resizeLetters(gameContext)
+
+    const { animator } = gameContext
+    const delays = [0, 200, 100]
+    this.letterButtons.map((button, i) => {
+      button.scaleX = 0
+      button.disabled = true
+
+      animator.animate(button)
+        .wait(delays[i])
+        .tween({ scaleX: { to: 1 }}, 300, animator.easeOutCubic)
+        .start(() => {
+          button.disabled = false
+        })
+    })
+
   }
 
   handleEvent({ gameContext, event }) {
@@ -29,17 +44,32 @@ export default class Room extends ViewList {
   }
 
   handleLetterClick(gameContext, button) {
+    const { animator, width } = gameContext
+
     if (button.letter === this.correctLetter) {
-      button.letter = pickLetter(this.letterButtons.map(({letter}) => letter))
-      button.updateTextOffset(gameContext)
-      this.pickCorrectLetter()
+      this.letterButtons.map((button) => button.disabled = true)
+      animator.animate(button)
+        .tween({ scaleX: { to: 0 }, scaleY: { to: 1.5 }, opacity: { to: 0 }}, 300, animator.easeInOutCubic, () => {
+          button.letter = pickLetter(this.letterButtons.map(({letter}) => letter))
+          button.updateTextOffset(gameContext)
+          this.pickCorrectLetter()
+        })
+        .wait(500)
+        .tween({ scaleX: { to: 1 }, scaleY: { from: 1 }, opacity: { from: 1 }}, 300, animator.easeInOutCubic)
+        .start(() => {
+          this.letterButtons.map((button) => button.disabled = false)
+        })
     }
     else {
-      gameContext.animator.animate(this.offset)
-                          .tween({ x: { to: 10 }, y: { to: 10 } }, 50)
-                          .tween({ x: { to: -10 }, y: { to: -10 } }, 50)
-                          .tween({ x: { to: 0 }, y: { to: 0 } }, 50)
-                          .start(() => console.log('Animation ended!'))
+
+      this.letterButtons.map((button) => button.disabled = true)
+      animator.animate(this)
+                          .tween({ originX: { to: width * .005 }, originY: { to: width * .005 } }, 50)
+                          .tween({ originX: { to: -width * .005 }, originY: { to: -width * .005 } }, 50)
+                          .tween({ originX: { to: 0 }, originY: { to: 0 } }, 50)
+                          .start(() => {
+                            this.letterButtons.map((button) => button.disabled = false)
+                          })
     }
   }
 

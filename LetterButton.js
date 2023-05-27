@@ -44,9 +44,9 @@ export default class LetterButton extends Clickable {
 
   handleDownStateChange(gameContext) {
     gameContext.animator.push({
-      object: this.offset,
+      object: this,
       values: {
-        y: { to: this.isDown ? -this.size * 0.02 : 0 }
+        originY: { to: this.isDown ? -this.size * 0.02 : 0 }
       },
       ease: gameContext.animator.easeInOutSine,
       duration: 50
