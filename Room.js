@@ -49,13 +49,13 @@ export default class Room extends ViewList {
     if (button.letter === this.correctLetter) {
       this.letterButtons.map((button) => button.disabled = true)
       animator.animate(button)
-        .tween({ scaleX: { to: 0 }, scaleY: { to: 1.5 }, opacity: { to: 0 }}, 300, animator.easeInOutCubic, () => {
+        .tween({ scaleX: { to: 1.5 }, scaleY: { to: 1.5 }, opacity: { to: 0 }}, 400, animator.easeOutCubic, () => {
           button.letter = pickLetter(this.letterButtons.map(({letter}) => letter))
           button.updateTextOffset(gameContext)
           this.pickCorrectLetter()
         })
         .wait(500)
-        .tween({ scaleX: { to: 1 }, scaleY: { from: 1 }, opacity: { from: 1 }}, 300, animator.easeInOutCubic)
+        .tween({ scaleX: { from: 0, to: 1 }, scaleY: { from: 1 }, opacity: { from: 1 }}, 300, animator.easeInOutCubic)
         .start(() => {
           this.letterButtons.map((button) => button.disabled = false)
         })
