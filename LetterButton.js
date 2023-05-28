@@ -30,8 +30,8 @@ export default class LetterButton extends Clickable {
   draw(gameContext) {
     super.draw(gameContext, () => {
       const { ctx } = gameContext
-      ctx.strokeStyle = this.isDown ? "#5F5" : "#000"
-      ctx.fillStyle = this.isDown ? "#5F5" : "#000"
+      ctx.strokeStyle = this.isDown ? "#C4C" : "#000"
+      ctx.fillStyle = this.isDown ? "#C4C" : "#000"
 
       ctx.beginPath();
       ctx.roundRect(-this.size / 2, -this.size / 2, this.size, this.size, this.size * .2);

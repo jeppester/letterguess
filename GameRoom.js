@@ -1,21 +1,21 @@
-import ViewList from '/ViewList.js'
-import LetterButton from '/LetterButton.js'
-import pickLetter from '/utils/pickLetter.js'
+import ViewList from './ViewList.js'
+import LetterButton from './LetterButton.js'
+import pickLetter from './utils/pickLetter.js'
+import playAudio from './utils/playAudio.js'
 
-export default class Room extends ViewList {
+export default class GameRoom extends ViewList {
   constructor(gameContext) {
     super()
 
     this.padding = 20
-
     this.letterButtons = []
+
     const usedLetters = []
     for (let i = 0; i < 3; i ++) {
       let letter = pickLetter(usedLetters)
       usedLetters.push(letter)
       this.letterButtons.push(new LetterButton({ letter, onClick: this.handleLetterClick.bind(this, gameContext) }))
     }
-    this.pickCorrectLetter()
 
     this.push(...this.letterButtons)
     this.resizeLetters(gameContext)
@@ -30,10 +30,11 @@ export default class Room extends ViewList {
         .wait(delays[i])
         .tween({ scaleX: { to: 1 }}, 300, animator.easeOutCubic)
         .start(() => {
+          // Pick correct letter, but only once
+          if (i === 0) this.pickCorrectLetter(gameContext)
           button.disabled = false
         })
     })
-
   }
 
   handleEvent({ gameContext, event }) {
@@ -45,6 +46,7 @@ export default class Room extends ViewList {
 
   handleLetterClick(gameContext, button) {
     const { animator, width } = gameContext
+    this.cancelLetterPlaybackTimer(gameContext)
 
     if (button.letter === this.correctLetter) {
       this.letterButtons.map((button) => button.disabled = true)
@@ -52,16 +54,15 @@ export default class Room extends ViewList {
         .tween({ scaleX: { to: 1.5 }, scaleY: { to: 1.5 }, opacity: { to: 0 }}, 400, animator.easeOutCubic, () => {
           button.letter = pickLetter(this.letterButtons.map(({letter}) => letter))
           button.updateTextOffset(gameContext)
-          this.pickCorrectLetter()
         })
         .wait(500)
         .tween({ scaleX: { from: 0, to: 1 }, scaleY: { from: 1 }, opacity: { from: 1 }}, 300, animator.easeInOutCubic)
         .start(() => {
+          this.pickCorrectLetter(gameContext)
           this.letterButtons.map((button) => button.disabled = false)
         })
     }
     else {
-
       this.letterButtons.map((button) => button.disabled = true)
       animator.animate(this)
                           .tween({ originX: { to: width * .005 }, originY: { to: width * .005 } }, 50)
@@ -69,14 +70,35 @@ export default class Room extends ViewList {
                           .tween({ originX: { to: 0 }, originY: { to: 0 } }, 50)
                           .start(() => {
                             this.letterButtons.map((button) => button.disabled = false)
+                            this.playCurrentLetter(gameContext)
                           })
     }
   }
 
-  pickCorrectLetter() {
+  pickCorrectLetter(gameContext) {
     const currentLetters = this.letterButtons.map(({ letter }) => letter)
     this.correctLetter = currentLetters[Math.floor(Math.random() * currentLetters.length)]
-    console.log(this.correctLetter)
+
+    this.letterPlaybackTimer = gameContext.animator.delay(300, () => {
+      this.playCurrentLetter(gameContext)
+    })
+  }
+
+  playCurrentLetter(gameContext) {
+    const { audioContext, animator, assetLoader } = gameContext
+    playAudio(audioContext, assetLoader.audio[`letters.${this.correctLetter}`])
+
+    this.cancelLetterPlaybackTimer(gameContext)
+    this.letterPlaybackTimer = animator.delay(5000, () => {
+      this.playCurrentLetter(gameContext)
+    })
+  }
+
+  cancelLetterPlaybackTimer({ animator }) {
+    const index = animator.indexOf(this.letterPlaybackTimer)
+    if (index !== -1) {
+      animator.splice(index, 1)
+    }
   }
 
   resizeLetters(gameContext) {

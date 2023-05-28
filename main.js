@@ -1,11 +1,13 @@
-import ViewList from '/ViewList.js'
-import Room from '/Room.js'
-import Animator from '/Animator.js'
+import ViewList from './ViewList.js'
+import LoaderRoom from './LoaderRoom.js'
+import Animator from './Animator.js'
+import AssetLoader from './AssetLoader.js'
 
 let lastTime = performance.now()
 
 const mainViewList = new ViewList()
 const canvas = document.querySelector('#game')
+const audioContext = new AudioContext()
 
 const gameContext = {
   dT: 0,
@@ -13,7 +15,9 @@ const gameContext = {
   height: 0,
   mainViewList,
   ctx: canvas.getContext('2d'),
+  audioContext,
   animator: new Animator(lastTime),
+  assetLoader: new AssetLoader(audioContext),
 }
 
 const resize = () => {
@@ -50,4 +54,4 @@ const handleEvent = (event) => {
 
 requestAnimationFrame(mainLoop)
 
-mainViewList.push(new Room(gameContext))
+mainViewList.push(new LoaderRoom(gameContext))

@@ -11,6 +11,16 @@ export default class Animator extends Array {
     return new AnimationBuilder(this, target)
   }
 
+  delay(duration, callback) {
+    const animation = {
+      duration,
+      callback
+    }
+    this.push(animation)
+
+    return animation
+  }
+
   easeLinear(t) {
     return t
   }
@@ -51,9 +61,9 @@ export default class Animator extends Array {
 
   update({ dT }) {
     this.time += dT
-    const dropIndexes = []
+    const dropAnimations = []
 
-    this.forEach((animation, index) => {
+    this.forEach((animation) => {
       // Update all values
       const aDT = this.time - animation.startTime
       const t = Math.min(aDT / animation.duration, 1)
@@ -64,11 +74,16 @@ export default class Animator extends Array {
       })
 
       if (t === 1) {
-        dropIndexes.push(index)
+        dropAnimations.push(animation)
         animation.callback?.call()
       }
     })
 
-    dropIndexes.reverse().forEach(index => this.splice(index, 1))
+    dropAnimations.forEach(animation => {
+      const index = this.indexOf(animation)
+      if (index !== -1) {
+        this.splice(index, 1)
+      }
+    })
   }
 }

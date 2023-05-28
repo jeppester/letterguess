@@ -11,6 +11,12 @@ export default class ViewList extends Array {
     this.scaleY = 1
   }
 
+  removeChild(child) {
+    const index = this.indexOf(child)
+
+    if (index !== -1) this.splice(index, 1)
+  }
+
   handleEvent(event) {
     this.forEach((object) => {
       object.handleEvent?.call(object, event)
