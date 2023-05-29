@@ -89,7 +89,7 @@ export default class GameRoom extends ViewList {
     playAudio(audioContext, assetLoader.audio[`letters.${this.correctLetter}`])
 
     this.cancelLetterPlaybackTimer(gameContext)
-    this.letterPlaybackTimer = animator.delay(5000, () => {
+    this.letterPlaybackTimer = animator.delay(10000, () => {
       this.playCurrentLetter(gameContext)
     })
   }
