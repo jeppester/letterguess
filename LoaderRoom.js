@@ -1,11 +1,15 @@
 import ViewList from './ViewList.js'
 import GameRoom from './GameRoom.js'
+import LoadBar from './LoadBar.js'
+import StartButton from './StartButton.js'
 
 export default class LoaderRoom extends ViewList {
   constructor(gameContext) {
     super()
 
-    this.loadAssets(gameContext).then(this.onLoaded.bind(this, gameContext))
+    this.loadAssets(gameContext)
+    this.loadBar = new LoadBar(this.onLoadBarFinished.bind(this, gameContext))
+    this.push(this.loadBar)
   }
 
   async loadAssets(gameContext) {
@@ -43,11 +47,44 @@ export default class LoaderRoom extends ViewList {
         'letters.Ø': "/audio/letters/Ø.mp3",
         'letters.Å': "/audio/letters/Å.mp3",
       }
-    }, (loaded, total) => console.log(`Loaded ${loaded}/${total}`))
+    }, this.onProgress.bind(this, gameContext))
   }
 
-  onLoaded(gameContext) {
-    gameContext.mainViewList.removeChild(this)
-    gameContext.mainViewList.push(new GameRoom(gameContext))
+  onProgress(gameContext, loaded, total) {
+    this.loadBar.updateProgress(gameContext, loaded / total * 100)
+  }
+
+  onLoadBarFinished(gameContext) {
+    const { animator } = gameContext
+
+    animator.animate(this.loadBar)
+            .wait(400)
+            .tween({ opacity: { to: 0 } }, 500)
+            .wait(400)
+            .start(this.handleLoaded.bind(this, gameContext))
+  }
+
+  handleLoaded(gameContext) {
+    const { animator } = gameContext
+
+    this.startButton = new StartButton(gameContext, this.handleStartGame.bind(this, gameContext))
+    this.push(this.startButton)
+
+    animator
+      .animate(this.startButton)
+      .tween({ opacity: { from: 0, to: 1 }, originY: { from: -this.startButton.size * .1 }}, 300, animator.easeOutCubic)
+      .start()
+  }
+
+  handleStartGame(gameContext) {
+    const { animator } = gameContext
+    animator
+      .animate(this.startButton)
+      .tween({ scaleX: { to: 1.5 }, scaleY: { to: 1.5 }, opacity: { to: 0 }}, 400, animator.easeOutCubic)
+      .wait(500)
+      .start(() => {
+        gameContext.mainViewList.removeChild(this)
+        gameContext.mainViewList.push(new GameRoom(gameContext))
+      })
   }
 }

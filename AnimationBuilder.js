@@ -15,7 +15,7 @@ export default class AnimationBuilder {
 
   tween(values, duration = 200, ease, callback) {
     this.tweens.push({
-      object: this.target,
+      target: this.target,
       values,
       duration,
       ease,

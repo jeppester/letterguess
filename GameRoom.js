@@ -55,8 +55,11 @@ export default class GameRoom extends ViewList {
           button.letter = pickLetter(this.letterButtons.map(({letter}) => letter))
           button.updateTextOffset(gameContext)
         })
-        .wait(500)
-        .tween({ scaleX: { from: 0, to: 1 }, scaleY: { from: 1 }, opacity: { from: 1 }}, 300, animator.easeInOutCubic)
+        .wait(500, () => {
+          button.scaleY = 1
+          button.opacity = 1
+        })
+        .tween({ scaleX: { from: 0, to: 1 }}, 300, animator.easeInOutCubic)
         .start(() => {
           this.pickCorrectLetter(gameContext)
           this.letterButtons.map((button) => button.disabled = false)

@@ -41,6 +41,18 @@ export default class Animator extends Array {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
+  clear(target) {
+    const indices = []
+
+    this.forEach((animation, index) => {
+      if (animation.target === target) indices.push(index)
+    })
+
+    indices.reverse().forEach(index => {
+      this.splice(index, 1)
+    })
+  }
+
   push(...animations) {
     animations.forEach(animation => {
       animation.values ||= {}
@@ -48,8 +60,8 @@ export default class Animator extends Array {
       // Set start time, and start values for each animation
       animation.startTime = this.time
       Object.entries(animation.values).forEach(([name, options]) => {
-        if (options.from === undefined) options.from = animation.object[name]
-        if (options.to === undefined) options.to = options.from
+        if (options.from === undefined) options.from = animation.target[name]
+        if (options.to === undefined) options.to = animation.target[name]
       })
 
       // Set default easing function
@@ -70,7 +82,7 @@ export default class Animator extends Array {
       const tEased = animation.ease(t)
       Object.entries(animation.values).forEach(([name, options]) => {
         const dv = options.to - options.from
-        animation.object[name] = options.from + dv * tEased
+        animation.target[name] = options.from + dv * tEased
       })
 
       if (t === 1) {

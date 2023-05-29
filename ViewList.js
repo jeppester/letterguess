@@ -29,7 +29,8 @@ export default class ViewList extends Array {
     })
   }
 
-  draw({ ctx }) {
+  draw(gameContext) {
+    const { ctx } = gameContext
     ctx.save()
 
     ctx.translate(this.x, this.y)
@@ -38,7 +39,7 @@ export default class ViewList extends Array {
     ctx.translate(-this.originX, -this.originY)
 
     this.forEach((child) => {
-      child.draw?.call(child, { ctx })
+      child.draw?.call(child, gameContext)
     })
 
     ctx.restore()
