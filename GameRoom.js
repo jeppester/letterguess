@@ -45,27 +45,11 @@ export default class GameRoom extends ViewList {
   }
 
   handleLetterClick(gameContext, button) {
-    const { animator, width, assetLoader, audioContext } = gameContext
+    const { animator, width } = gameContext
     this.cancelLetterPlaybackTimer(gameContext)
 
     if (button.letter === this.correctLetter) {
-      playAudio(audioContext, assetLoader.pick('audio', 'success'))
-
-      this.letterButtons.map((button) => button.disabled = true)
-      animator.animate(button)
-        .tween({ scaleX: { to: 1.5 }, scaleY: { to: 1.5 }, opacity: { to: 0 }}, 400, animator.easeOutCubic, () => {
-          button.letter = pickLetter(this.letterButtons.map(({letter}) => letter))
-          button.updateTextOffset(gameContext)
-        })
-        .wait(500, () => {
-          button.scaleY = 1
-          button.opacity = 1
-        })
-        .tween({ scaleX: { from: 0, to: 1 }}, 300, animator.easeInOutCubic)
-        .start(() => {
-          this.pickCorrectLetter(gameContext)
-          this.letterButtons.map((button) => button.disabled = false)
-        })
+      this.handleCorrectLetter(gameContext, button)
     }
     else {
       this.letterButtons.map((button) => button.disabled = true)
@@ -78,6 +62,31 @@ export default class GameRoom extends ViewList {
                             this.playCurrentLetter(gameContext)
                           })
     }
+  }
+
+  async handleCorrectLetter(gameContext, button) {
+    const { animator, assetLoader, audioContext } = gameContext
+
+    this.letterButtons.map((button) => button.disabled = true)
+
+    await Promise.all([
+      playAudio(audioContext, assetLoader.pick('audio', 'success')),
+      animator.animate(button)
+        .tween({ scaleX: { to: 1.5 }, scaleY: { to: 1.5 }, opacity: { to: 0 }}, 400, animator.easeOutCubic)
+        .start()
+    ])
+
+    button.letter = pickLetter(this.letterButtons.map(({letter}) => letter))
+    button.updateTextOffset(gameContext)
+    button.scaleY = 1
+    button.opacity = 1
+
+    await animator.animate(button)
+      .tween({ scaleX: { from: 0, to: 1 }}, 300, animator.easeInOutCubic)
+      .start()
+
+    this.pickCorrectLetter(gameContext)
+    this.letterButtons.map((button) => button.disabled = false)
   }
 
   pickCorrectLetter(gameContext) {
