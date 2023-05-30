@@ -45,10 +45,12 @@ export default class GameRoom extends ViewList {
   }
 
   handleLetterClick(gameContext, button) {
-    const { animator, width } = gameContext
+    const { animator, width, assetLoader, audioContext } = gameContext
     this.cancelLetterPlaybackTimer(gameContext)
 
     if (button.letter === this.correctLetter) {
+      playAudio(audioContext, assetLoader.pick('audio', 'success'))
+
       this.letterButtons.map((button) => button.disabled = true)
       animator.animate(button)
         .tween({ scaleX: { to: 1.5 }, scaleY: { to: 1.5 }, opacity: { to: 0 }}, 400, animator.easeOutCubic, () => {

@@ -5,6 +5,7 @@ export default class StartButton extends Clickable {
     super()
 
     this.onClick = onClick
+    this.text = "▶"
     this.resize(gameContext)
   }
 
@@ -15,11 +16,27 @@ export default class StartButton extends Clickable {
     super.handleEvent({ gameContext, event })
   }
 
-  resize({ width, height }) {
+  resize({ ctx, width, height }) {
     this.x = width / 2
     this.y = height / 2
 
-    this.size = Math.max(width * .2, 200)
+    this.size = Math.max(width * .3, 200)
+
+    this.updateTextOffset({ ctx })
+  }
+
+  setFont(ctx) {
+    ctx.textAlign = 'center'
+    ctx.lineWidth = this.size * .07
+    ctx.font = `${this.size * .8}px Arial`;
+}
+
+  updateTextOffset({ ctx }) {
+    ctx.save()
+    this.setFont(ctx)
+    const textMeasure = ctx.measureText(this.text);
+    this.textYOffset = (textMeasure.actualBoundingBoxAscent - textMeasure.actualBoundingBoxDescent) / 2
+    ctx.restore()
   }
 
   setBoundingBoxPath(gameContext, boundingBox) {
@@ -34,7 +51,6 @@ export default class StartButton extends Clickable {
 
   draw(gameContext) {
     super.draw(gameContext, () => {
-
       const { ctx } = gameContext
       ctx.strokeStyle = this.isDown ? "#C4C" : "#000"
       ctx.fillStyle = this.isDown ? "#C4C" : "#000"
@@ -43,12 +59,8 @@ export default class StartButton extends Clickable {
       this.setOutline(gameContext)
       ctx.stroke()
 
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      ctx.font = `${this.size * .8}px Arial`;
-      // ctx.lineJoin = "bevel"
-      ctx.lineWidth = this.size * .07
-      ctx.strokeText("▶", 0, 0)
+      this.setFont(ctx)
+      ctx.strokeText(this.text, 0, this.textYOffset)
     })
   }
 

@@ -5,6 +5,16 @@ export default class AssetLoader {
     this.images = {}
   }
 
+  list(type, prefix) {
+    return Object.keys(this[type]).filter(key => key.startsWith(prefix))
+  }
+
+  pick(type, prefix) {
+    const keys = this.list(type, prefix)
+    const key = keys[Math.floor(Math.random() * keys.length)]
+    return this[type][key]
+  }
+
   loadAssets({
     images = {},
     audio = {}
