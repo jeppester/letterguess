@@ -1,9 +1,9 @@
-import ViewList from './ViewList.js'
+import ViewList from '../../engine/ViewList.js'
 import LetterButton from './LetterButton.js'
-import pickLetter from './utils/pickLetter.js'
-import playAudio from './utils/playAudio.js'
+import pickLetter from '../../utils/pickLetter.js'
+import playAudio from '../../utils/playAudio.js'
 
-export default class GameRoom extends ViewList {
+export default class GameScreen extends ViewList {
   constructor(gameContext) {
     super()
 

@@ -1,7 +1,7 @@
-import ViewList from './ViewList.js'
-import LoaderRoom from './LoaderRoom.js'
-import Animator from './Animator.js'
-import AssetLoader from './AssetLoader.js'
+import ViewList from './engine/ViewList.js'
+import LoadingScreen from './screens/LoadingScreen/LoadingScreen.js'
+import Animator from './engine/Animator.js'
+import AssetLoader from './engine/AssetLoader.js'
 
 let lastTime = performance.now()
 
@@ -54,4 +54,4 @@ const handleEvent = (event) => {
 
 requestAnimationFrame(mainLoop)
 
-mainViewList.push(new LoaderRoom(gameContext))
+mainViewList.push(new LoadingScreen(gameContext))

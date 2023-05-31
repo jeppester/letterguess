@@ -1,4 +1,4 @@
-import View from './View.js'
+import View from '../../engine/View.js'
 
 export default class LoadBar extends View {
   constructor(onFinished) {

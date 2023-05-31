@@ -1,9 +1,9 @@
-import ViewList from './ViewList.js'
-import GameRoom from './GameRoom.js'
+import ViewList from '../../engine/ViewList.js'
+import GameScreen from '../GameScreen/GameScreen.js'
 import LoadBar from './LoadBar.js'
 import StartButton from './StartButton.js'
 
-export default class LoaderRoom extends ViewList {
+export default class LoadingScreen extends ViewList {
   constructor(gameContext) {
     super()
 
@@ -105,7 +105,7 @@ export default class LoaderRoom extends ViewList {
       .wait(500)
       .start(() => {
         gameContext.mainViewList.removeChild(this)
-        gameContext.mainViewList.push(new GameRoom(gameContext))
+        gameContext.mainViewList.push(new GameScreen(gameContext))
       })
   }
 }

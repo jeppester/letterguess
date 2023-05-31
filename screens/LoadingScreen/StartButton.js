@@ -1,4 +1,4 @@
-import Clickable from './Clickable.js'
+import Clickable from '../../engine/Clickable.js'
 
 export default class StartButton extends Clickable {
   constructor(gameContext, onClick) {

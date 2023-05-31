@@ -1,4 +1,4 @@
-import Clickable from './Clickable.js'
+import Clickable from '../../engine/Clickable.js'
 
 export default class LetterButton extends Clickable {
   constructor({ letter, onClick }) {
