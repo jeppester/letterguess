@@ -1,6 +1,6 @@
 import View from '../../engine/View.js'
 
-export default class LoadBar extends View {
+export default class ProgressBar extends View {
   constructor(onFinished) {
     super()
 

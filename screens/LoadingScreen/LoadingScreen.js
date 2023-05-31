@@ -1,6 +1,6 @@
 import ViewList from '../../engine/ViewList.js'
 import GameScreen from '../GameScreen/GameScreen.js'
-import LoadBar from './LoadBar.js'
+import ProgressBar from './ProgressBar.js'
 import StartButton from './StartButton.js'
 
 export default class LoadingScreen extends ViewList {
@@ -8,8 +8,8 @@ export default class LoadingScreen extends ViewList {
     super()
 
     this.loadAssets(gameContext)
-    this.loadBar = new LoadBar(this.onLoadBarFinished.bind(this, gameContext))
-    this.push(this.loadBar)
+    this.progressBar = new ProgressBar(this.onProgressBarFinished.bind(this, gameContext))
+    this.push(this.progressBar)
   }
 
   async loadAssets(gameContext) {
@@ -71,13 +71,13 @@ export default class LoadingScreen extends ViewList {
   }
 
   onProgress(gameContext, loaded, total) {
-    this.loadBar.updateProgress(gameContext, loaded / total * 100)
+    this.progressBar.updateProgress(gameContext, loaded / total * 100)
   }
 
-  onLoadBarFinished(gameContext) {
+  onProgressBarFinished(gameContext) {
     const { animator } = gameContext
 
-    animator.animate(this.loadBar)
+    animator.animate(this.progressBar)
             .wait(400)
             .tween({ opacity: { to: 0 } }, 500)
             .wait(400)
@@ -86,7 +86,7 @@ export default class LoadingScreen extends ViewList {
 
   handleLoaded(gameContext) {
     const { animator } = gameContext
-    this.removeChild(this.loadBar)
+    this.removeChild(this.progressBar)
 
     this.startButton = new StartButton(gameContext, this.handleStartGame.bind(this, gameContext))
     this.push(this.startButton)
