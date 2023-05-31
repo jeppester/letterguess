@@ -14,7 +14,7 @@ export default class LoadBar extends View {
     const { animator } = gameContext
     this.percentage = percentage
 
-    animator.clear(this)
+    animator.cancelTarget(this)
 
     animator
       .animate(this)

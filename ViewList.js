@@ -1,6 +1,6 @@
-export default class ViewList extends Array {
+export default class ViewList {
   constructor() {
-    super()
+    this.children = []
 
     this.x = 0
     this.y = 0
@@ -11,10 +11,16 @@ export default class ViewList extends Array {
     this.scaleY = 1
   }
 
-  removeChild(child) {
-    const index = this.indexOf(child)
+  push(...args) {
+    this.children.push(...args)
+  }
 
-    if (index !== -1) this.splice(index, 1)
+  forEach(...args) {
+    this.children.forEach(...args)
+  }
+
+  removeChild(child) {
+    this.children = this.children.filter(other => other !== child)
   }
 
   handleEvent(event) {

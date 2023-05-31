@@ -1,9 +1,8 @@
 import AnimationBuilder from './AnimationBuilder.js'
 
-export default class Animator extends Array {
+export default class Animator {
   constructor(startTime) {
-    super()
-
+    this.tweens = []
     this.time = startTime
   }
 
@@ -41,61 +40,52 @@ export default class Animator extends Array {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
-  clear(target) {
-    const indices = []
-
-    this.forEach((animation, index) => {
-      if (animation.target === target) indices.push(index)
-    })
-
-    indices.reverse().forEach(index => {
-      this.splice(index, 1)
-    })
+  cancel(tween) {
+    this.tweens = this.tweens.filter(other => other !== tween)
   }
 
-  push(...animations) {
-    animations.forEach(animation => {
-      animation.values ||= {}
+  cancelTarget(target) {
+    this.tweens = this.tweens.filter(tween => tween.target !== target)
+  }
+
+  push(...tweens) {
+    tweens.forEach(tween => {
+      tween.values ||= {}
 
       // Set start time, and start values for each animation
-      animation.startTime = this.time
-      Object.entries(animation.values).forEach(([name, options]) => {
-        if (options.from === undefined) options.from = animation.target[name]
-        if (options.to === undefined) options.to = animation.target[name]
+      tween.startTime = this.time
+      Object.entries(tween.values).forEach(([name, options]) => {
+        if (options.from === undefined) options.from = tween.target[name]
+        if (options.to === undefined) options.to = tween.target[name]
       })
 
       // Set default easing function
-      if (!animation.ease) animation.ease = this.easeLinear
+      if (!tween.ease) tween.ease = this.easeLinear
     })
 
-    super.push(...animations)
+    this.tweens.push(...tweens)
   }
 
   update({ dT }) {
     this.time += dT
-    const dropAnimations = []
+    const dropTweens = []
 
-    this.forEach((animation) => {
+    this.tweens.forEach((tween) => {
       // Update all values
-      const aDT = this.time - animation.startTime
-      const t = Math.min(aDT / animation.duration, 1)
-      const tEased = animation.ease(t)
-      Object.entries(animation.values).forEach(([name, options]) => {
+      const aDT = this.time - tween.startTime
+      const t = Math.min(aDT / tween.duration, 1)
+      const tEased = tween.ease(t)
+      Object.entries(tween.values).forEach(([name, options]) => {
         const dv = options.to - options.from
-        animation.target[name] = options.from + dv * tEased
+        tween.target[name] = options.from + dv * tEased
       })
 
       if (t === 1) {
-        dropAnimations.push(animation)
-        animation.callback?.call()
+        dropTweens.push(tween)
+        tween.callback?.call()
       }
     })
 
-    dropAnimations.forEach(animation => {
-      const index = this.indexOf(animation)
-      if (index !== -1) {
-        this.splice(index, 1)
-      }
-    })
+    this.tweens = this.tweens.filter(tween => !dropTweens.includes(tween))
   }
 }

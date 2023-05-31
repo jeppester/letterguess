@@ -86,6 +86,7 @@ export default class LoaderRoom extends ViewList {
 
   handleLoaded(gameContext) {
     const { animator } = gameContext
+    this.removeChild(this.loadBar)
 
     this.startButton = new StartButton(gameContext, this.handleStartGame.bind(this, gameContext))
     this.push(this.startButton)

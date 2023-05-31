@@ -109,10 +109,7 @@ export default class GameRoom extends ViewList {
   }
 
   cancelLetterPlaybackTimer({ animator }) {
-    const index = animator.indexOf(this.letterPlaybackTimer)
-    if (index !== -1) {
-      animator.splice(index, 1)
-    }
+    animator.cancel(this.letterPlaybackTimer)
   }
 
   resizeLetters(gameContext) {
