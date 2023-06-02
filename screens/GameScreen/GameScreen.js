@@ -79,6 +79,7 @@ export default class GameScreen extends ViewList {
       animator.animate(button)
         .tween({
           x: 0,
+          y: 0,
           scaleX: emphasizeScale,
           scaleY: emphasizeScale,
           boxScale
@@ -139,16 +140,36 @@ export default class GameScreen extends ViewList {
     this.x = gameContext.width / 2
     this.y = gameContext.height / 2
 
-    const usedWidth = Math.min(gameContext.width, 1000)
-    const hSpace = usedWidth - this.padding
+    const isLandScape = gameContext.width > gameContext.height
+    const maxTotalSize = 600
 
-    const xPositions = [-hSpace / 3, 0, hSpace / 3]
-    const nextSize = hSpace / 3 - this.padding
+    if (isLandScape) {
+      const maxSpace = Math.min(gameContext.width, maxTotalSize)
+      const availableSpace = maxSpace - this.padding
 
-    this.letterButtons.forEach((button, index) => {
-      button.x = xPositions[index]
-      button.size = nextSize
-      button.updateTextOffset(gameContext)
-    })
+      const positions = [-availableSpace / 3, 0, availableSpace / 3]
+      const nextSize = availableSpace / 3 - this.padding
+
+      this.letterButtons.forEach((button, index) => {
+        button.y = 0
+        button.x = positions[index]
+        button.size = nextSize
+        button.updateTextOffset(gameContext)
+      })
+    }
+    else {
+      const maxSpace = Math.min(gameContext.height, maxTotalSize)
+      const availableSpace = maxSpace - this.padding
+
+      const positions = [-availableSpace / 3, 0, availableSpace / 3]
+      const nextSize = availableSpace / 3 - this.padding
+
+      this.letterButtons.forEach((button, index) => {
+        button.x = 0
+        button.y = positions[index]
+        button.size = nextSize
+        button.updateTextOffset(gameContext)
+      })
+    }
   }
 }
