@@ -2,6 +2,7 @@ import ViewList from '../../engine/ViewList.js'
 import LetterButton from './LetterButton.js'
 import pickLetter from '../../utils/pickLetter.js'
 import playAudio from '../../utils/playAudio.js'
+import theme from '../../consts/theme.js'
 
 export default class GameScreen extends ViewList {
   constructor(gameContext) {
@@ -54,9 +55,9 @@ export default class GameScreen extends ViewList {
     else {
       this.letterButtons.map((button) => button.disabled = true)
       animator.animate(this)
-                          .tween({ originX: { to: width * .005 }, originY: { to: width * .005 } }, 50)
-                          .tween({ originX: { to: -width * .005 }, originY: { to: -width * .005 } }, 50)
-                          .tween({ originX: { to: 0 }, originY: { to: 0 } }, 50)
+                          .tween({ originX: width * .005, originY: width * .005 }, 50)
+                          .tween({ originX: -width * .005, originY: -width * .005 }, 50)
+                          .tween({ originX: 0, originY: 0 }, 50)
                           .start(() => {
                             this.letterButtons.map((button) => button.disabled = false)
                             this.playCurrentLetter(gameContext)
@@ -65,21 +66,43 @@ export default class GameScreen extends ViewList {
   }
 
   async handleCorrectLetter(gameContext, button) {
-    const { animator, assetLoader, audioContext } = gameContext
+    const { animator, assetLoader, audioContext, width, height } = gameContext
+    const emphasizeScale = 2
 
     this.letterButtons.map((button) => button.disabled = true)
+    this.moveToFront(button)
+    const boxScale = Math.max(width, height) / (emphasizeScale * (button.size - theme.button.borderWidth))
+    button.renderDown = true
 
     await Promise.all([
       playAudio(audioContext, assetLoader.pick('audio', 'success')),
       animator.animate(button)
-        .tween({ scaleX: { to: 1.5 }, scaleY: { to: 1.5 }, opacity: { to: 0 }}, 400, animator.easeOutCubic)
+        .tween({
+          x: 0,
+          scaleX: emphasizeScale,
+          scaleY: emphasizeScale,
+          boxScale
+        }, 400, animator.easeOutCubic)
         .start()
-    ])
+    ]).then(() =>
+      animator
+        .animate(button)
+        .wait(200)
+        .tween({ opacity: 0, scaleX: 6, scaleY: 6 }, 300, animator.easeOutCubic)
+        .wait(200)
+        .start()
+    )
 
     button.letter = pickLetter(this.letterButtons.map(({letter}) => letter))
     button.updateTextOffset(gameContext)
     button.scaleY = 1
     button.opacity = 1
+    button.boxScale = 1
+    button.renderDown = false
+
+    // We recalculate all button positions,
+    // the screen size might have changed during the animation
+    this.resizeLetters(gameContext)
 
     await animator.animate(button)
       .tween({ scaleX: { from: 0, to: 1 }}, 300, animator.easeInOutCubic)
@@ -116,7 +139,8 @@ export default class GameScreen extends ViewList {
     this.x = gameContext.width / 2
     this.y = gameContext.height / 2
 
-    const hSpace = gameContext.width - this.padding
+    const usedWidth = Math.min(gameContext.width, 1000)
+    const hSpace = usedWidth - this.padding
 
     const xPositions = [-hSpace / 3, 0, hSpace / 3]
     const nextSize = hSpace / 3 - this.padding

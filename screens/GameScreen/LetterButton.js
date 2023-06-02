@@ -1,4 +1,5 @@
 import Clickable from '../../engine/Clickable.js'
+import theme from '../../consts/theme.js'
 
 export default class LetterButton extends Clickable {
   constructor({ letter, onClick }) {
@@ -8,6 +9,7 @@ export default class LetterButton extends Clickable {
     this.size = 0
     this.letter = letter
     this.onClick = onClick
+    this.boxScale = 1
   }
 
   setFont(ctx) {
@@ -24,19 +26,31 @@ export default class LetterButton extends Clickable {
   }
 
   setBoundingBoxPath(_gameContext, boundingBox) {
-    boundingBox.roundRect(-this.size / 2, -this.size / 2, this.size, this.size, 30);
+    boundingBox.roundRect(-this.size / 2, -this.size / 2, this.size, this.size, theme.button.borderRadius);
   }
 
   draw(gameContext) {
     super.draw(gameContext, () => {
-      const { ctx } = gameContext
-      ctx.strokeStyle = this.isDown ? "#C4C" : "#000"
-      ctx.fillStyle = this.isDown ? "#C4C" : "#000"
+      const isDown = this.isDown || this.renderDown
 
+      const { ctx } = gameContext
       ctx.beginPath();
-      ctx.roundRect(-this.size / 2, -this.size / 2, this.size, this.size, this.size * .2);
+      ctx.roundRect(
+        -this.size / 2 * this.boxScale,
+        -this.size / 2 * this.boxScale,
+        this.size * this.boxScale,
+        this.size * this.boxScale,
+        theme.button.borderRadius
+      );
+
+      ctx.fillStyle = isDown ? theme.button.down.backgroundColor : theme.button.backgroundColor
+      ctx.lineWidth = theme.button.borderWidth;
+      ctx.fill()
+
+      ctx.strokeStyle = isDown ? theme.button.down.borderColor : theme.button.borderColor
       ctx.stroke();
 
+      ctx.fillStyle = isDown ? theme.button.down.textColor : theme.button.textColor
       this.setFont(ctx)
       ctx.fillText(this.letter, 0, this.textYOffset)
     })

@@ -55,8 +55,9 @@ export default class Animator {
       // Set start time, and start values for each animation
       tween.startTime = this.time
       Object.entries(tween.values).forEach(([name, options]) => {
-        if (options.from === undefined) options.from = tween.target[name]
-        if (options.to === undefined) options.to = tween.target[name]
+        if (typeof options !== "object") {
+          tween.values[name] = { to: options }
+        }
       })
 
       // Set default easing function
@@ -76,6 +77,9 @@ export default class Animator {
       const t = Math.min(aDT / tween.duration, 1)
       const tEased = tween.ease(t)
       Object.entries(tween.values).forEach(([name, options]) => {
+        if (options.from === undefined) options.from = tween.target[name]
+        if (options.to === undefined) options.to = tween.target[name]
+
         const dv = options.to - options.from
         tween.target[name] = options.from + dv * tEased
       })

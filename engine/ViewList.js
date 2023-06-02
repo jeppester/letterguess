@@ -23,6 +23,11 @@ export default class ViewList {
     this.children = this.children.filter(other => other !== child)
   }
 
+  moveToFront(child) {
+    this.removeChild(child)
+    this.push(child)
+  }
+
   handleEvent(event) {
     this.forEach((object) => {
       object.handleEvent?.call(object, event)

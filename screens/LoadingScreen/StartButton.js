@@ -1,4 +1,5 @@
 import Clickable from '../../engine/Clickable.js'
+import theme from '../../consts/theme.js'
 
 export default class StartButton extends Clickable {
   constructor(gameContext, onClick) {
@@ -52,13 +53,17 @@ export default class StartButton extends Clickable {
   draw(gameContext) {
     super.draw(gameContext, () => {
       const { ctx } = gameContext
-      ctx.strokeStyle = this.isDown ? "#C4C" : "#000"
-      ctx.fillStyle = this.isDown ? "#C4C" : "#000"
-
       ctx.beginPath()
       this.setOutline(gameContext)
-      ctx.stroke()
 
+      ctx.fillStyle = this.isDown ? theme.button.down.backgroundColor : theme.button.backgroundColor
+      ctx.lineWidth = theme.button.borderWidth;
+      ctx.fill()
+
+      ctx.strokeStyle = this.isDown ? theme.button.down.borderColor : theme.button.borderColor
+      ctx.stroke();
+
+      ctx.strokeStyle = this.isDown ? theme.button.down.textColor : theme.button.textColor
       this.setFont(ctx)
       ctx.strokeText(this.text, 0, this.textYOffset)
     })
