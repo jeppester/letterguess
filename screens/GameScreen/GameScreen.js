@@ -46,22 +46,13 @@ export default class GameScreen extends ViewList {
   }
 
   handleLetterClick(gameContext, button) {
-    const { animator, width } = gameContext
     this.cancelLetterPlaybackTimer(gameContext)
 
     if (button.letter === this.correctLetter) {
       this.handleCorrectLetter(gameContext, button)
     }
     else {
-      this.letterButtons.map((button) => button.disabled = true)
-      animator.animate(this)
-                          .tween({ originX: width * .005, originY: width * .005 }, 50)
-                          .tween({ originX: -width * .005, originY: -width * .005 }, 50)
-                          .tween({ originX: 0, originY: 0 }, 50)
-                          .start(() => {
-                            this.letterButtons.map((button) => button.disabled = false)
-                            this.playCurrentLetter(gameContext)
-                          })
+      this.handleIncorrectLetter(gameContext, button)
     }
   }
 
@@ -113,27 +104,71 @@ export default class GameScreen extends ViewList {
     this.letterButtons.map((button) => button.disabled = false)
   }
 
+  async handleIncorrectLetter(gameContext, button) {
+    const { audioContext, animator, assetLoader, width } = gameContext
+
+    this.letterButtons.map((button) => button.disabled = true)
+    this.moveToFront(button)
+
+    await Promise.all([
+      animator
+        .animate(this)
+        .tween({ originX: width * .005, originY: width * .005 }, 50)
+        .tween({ originX: -width * .005, originY: -width * .005 }, 50)
+        .tween({ originX: 0, originY: 0 }, 50)
+        .start(),
+      animator
+        .animate(button)
+        .tween({ scaleX: 1.5, scaleY: 1.5 }, 500, animator.easeInOutCubic)
+        .start(),
+      playAudio(audioContext, assetLoader.pick('audio', 'failure.before-incorrect'))
+        .then(() => animator.delay(300))
+        .then(() => Promise.all([
+          playAudio(audioContext, assetLoader.audio[`letters.${button.letter}`]),
+          animator
+            .animate(button)
+            .wait(200)
+            .tween({ originX: width * .005, originY: width * .005 }, 50)
+            .tween({ originX: -width * .005, originY: -width * .005 }, 50)
+            .tween({ originX: 0, originY: 0 }, 50)
+            .start(),
+        ]))
+        .then(() => animator.delay(300))
+        .then(() => playAudio(audioContext, assetLoader.pick('audio', 'failure.before-correct')))
+    ])
+
+    await Promise.all([
+      this.playCurrentLetter(gameContext),
+      animator
+        .animate(button)
+        .tween({ scaleX: 1, scaleY: 1 }, 500, animator.easeInOutCubic)
+        .start(),
+    ])
+    this.letterButtons.map((button) => button.disabled = false)
+  }
+
   pickCorrectLetter(gameContext) {
     const currentLetters = this.letterButtons.map(({ letter }) => letter)
     this.correctLetter = currentLetters[Math.floor(Math.random() * currentLetters.length)]
 
-    this.letterPlaybackTimer = gameContext.animator.delay(300, () => {
+    this.letterPlaybackTimer = gameContext.animator.delay(300).then(() => {
       this.playCurrentLetter(gameContext)
     })
   }
 
   playCurrentLetter(gameContext) {
     const { audioContext, animator, assetLoader } = gameContext
-    playAudio(audioContext, assetLoader.audio[`letters.${this.correctLetter}`])
 
     this.cancelLetterPlaybackTimer(gameContext)
-    this.letterPlaybackTimer = animator.delay(10000, () => {
+    this.letterPlaybackTimer = animator.delay(10000, 'current-letter-payback').then(() => {
       this.playCurrentLetter(gameContext)
     })
+
+    return playAudio(audioContext, assetLoader.audio[`letters.${this.correctLetter}`])
   }
 
   cancelLetterPlaybackTimer({ animator }) {
-    animator.cancel(this.letterPlaybackTimer)
+    animator.cancelKey('current-letter-payback')
   }
 
   resizeLetters(gameContext) {

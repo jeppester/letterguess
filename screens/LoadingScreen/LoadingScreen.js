@@ -66,6 +66,14 @@ export default class LoadingScreen extends ViewList {
         'success.utroligt': "/audio/success/utroligt.mp3",
         'success.vildt-nok': "/audio/success/vildt-nok.mp3",
         'success.vildt-sejt': "/audio/success/vildt-sejt.mp3",
+        'failure.before-incorrect.det-var-vist': "/audio/failure/before-incorrect/det-var-vist.mp3",
+        'failure.before-incorrect.taet-paa-men-det-var': "/audio/failure/before-incorrect/taet-paa-men-det-var.mp3",
+        'failure.before-incorrect.ups-det-var-et': "/audio/failure/before-incorrect/ups-det-var-et.mp3",
+        'failure.before-incorrect.vups-det-var': "/audio/failure/before-incorrect/vups-det-var.mp3",
+        'failure.before-correct.du-skal-finde': "/audio/failure/before-correct/du-skal-finde.mp3",
+        'failure.before-correct.proev-at-find-et': "/audio/failure/before-correct/proev-at-find-et.mp3",
+        'failure.before-correct.proev-igen-at-finde': "/audio/failure/before-correct/proev-igen-at-finde.mp3",
+        'failure.before-correct.vi-leder-efter': "/audio/failure/before-correct/vi-leder-efter.mp3",
       }
     }, this.onProgress.bind(this, gameContext))
   }

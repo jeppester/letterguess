@@ -10,14 +10,15 @@ export default class Animator {
     return new AnimationBuilder(this, target)
   }
 
-  delay(duration, callback) {
-    const animation = {
-      duration,
-      callback
-    }
-    this.push(animation)
-
-    return animation
+  delay(duration, key) {
+    return new Promise(res => {
+      const animation = {
+        key,
+        duration,
+        callback: res,
+      }
+      this.push(animation)
+    })
   }
 
   easeLinear(t) {
@@ -46,6 +47,10 @@ export default class Animator {
 
   cancelTarget(target) {
     this.tweens = this.tweens.filter(tween => tween.target !== target)
+  }
+
+  cancelKey(key) {
+    this.tweens = this.tweens.filter(tween => tween.key !== key)
   }
 
   push(...tweens) {
