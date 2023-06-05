@@ -2,7 +2,7 @@ import Clickable from '../../engine/Clickable.js'
 import theme from '../../consts/theme.js'
 
 export default class LetterButton extends Clickable {
-  constructor({ letter, onClick }) {
+  constructor({ letter, onClick, position }) {
     super()
 
     this.rotation = 0
@@ -11,6 +11,7 @@ export default class LetterButton extends Clickable {
     this.onClick = onClick
     this.boxScale = 1
     this.state = "normal"
+    this.position = position
   }
 
   setFont(ctx) {

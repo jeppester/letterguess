@@ -1,21 +1,25 @@
 import ViewList from '../../engine/ViewList.js'
 import LetterButton from './LetterButton.js'
-import pickLetter from '../../utils/pickLetter.js'
+import spliceRandom from '../../utils/spliceRandom.js'
 import playAudio from '../../utils/playAudio.js'
 import theme from '../../consts/theme.js'
 
 export default class GameScreen extends ViewList {
   constructor(gameContext) {
     super()
+    this.startGame(gameContext)
+  }
 
+  startGame(gameContext) {
     this.padding = 20
     this.letterButtons = []
+    this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"]
 
-    const usedLetters = []
     for (let i = 0; i < 3; i ++) {
-      let letter = pickLetter(usedLetters)
-      usedLetters.push(letter)
-      this.letterButtons.push(new LetterButton({ letter, onClick: this.handleLetterClick.bind(this, gameContext) }))
+      let letter = spliceRandom(this.availableLetters)
+      let position = i
+      let onClick = this.handleLetterClick.bind(this, gameContext)
+      this.letterButtons.push(new LetterButton({ letter, onClick, position }))
     }
 
     this.push(...this.letterButtons)
@@ -85,23 +89,35 @@ export default class GameScreen extends ViewList {
         .start()
     )
 
-    button.letter = pickLetter(this.letterButtons.map(({letter}) => letter))
-    button.updateTextOffset(gameContext)
-    button.scaleY = 1
-    button.opacity = 1
-    button.boxScale = 1
-    button.state = "normal"
-
     // We recalculate all button positions,
     // the screen size might have changed during the animation
     this.resizeLetters(gameContext)
 
-    await animator.animate(button)
-      .tween({ scaleX: { from: 0, to: 1 }}, 300, animator.easeInOutCubic)
-      .start()
+    const nextLetter = spliceRandom(this.availableLetters)
+    if (nextLetter) {
+      button.letter = nextLetter
+      button.updateTextOffset(gameContext)
+      button.scaleY = 1
+      button.opacity = 1
+      button.boxScale = 1
+      button.state = "normal"
 
-    this.pickCorrectLetter(gameContext)
-    this.letterButtons.map((button) => button.disabled = false)
+      await animator.animate(button)
+        .tween({ scaleX: { from: 0, to: 1 }}, 300, animator.easeInOutCubic)
+        .start()
+    }
+    else {
+      this.removeChild(button)
+      this.letterButtons.splice(this.letterButtons.indexOf(button), 1)
+    }
+
+    if (this.letterButtons.length !== 0) {
+      this.pickCorrectLetter(gameContext)
+      this.letterButtons.map((button) => button.disabled = false)
+    }
+    else {
+      this.startGame(gameContext)
+    }
   }
 
   async handleIncorrectLetter(gameContext, button) {
@@ -142,6 +158,8 @@ export default class GameScreen extends ViewList {
         .then(() => animator.delay(300))
         .then(() => playAudio(audioContext, assetLoader.pick('audio', 'failure/before-correct')))
     ])
+
+    button.state = "normal"
 
     await Promise.all([
       this.playCurrentLetter(gameContext),
@@ -194,9 +212,9 @@ export default class GameScreen extends ViewList {
       const positions = [-availableSpace / 3, 0, availableSpace / 3]
       const nextSize = availableSpace / 3 - this.padding
 
-      this.letterButtons.forEach((button, index) => {
+      this.letterButtons.forEach((button) => {
         button.y = 0
-        button.x = positions[index]
+        button.x = positions[button.position]
         button.size = nextSize
         button.updateTextOffset(gameContext)
       })
@@ -208,9 +226,9 @@ export default class GameScreen extends ViewList {
       const positions = [-availableSpace / 3, 0, availableSpace / 3]
       const nextSize = availableSpace / 3 - this.padding
 
-      this.letterButtons.forEach((button, index) => {
+      this.letterButtons.forEach((button) => {
         button.x = 0
-        button.y = positions[index]
+        button.y = positions[button.position]
         button.size = nextSize
         button.updateTextOffset(gameContext)
       })
