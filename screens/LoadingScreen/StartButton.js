@@ -50,20 +50,29 @@ export default class StartButton extends Clickable {
     ctx.roundRect(-this.size / 2, -this.size / 2, this.size, this.size, 30);
   }
 
+  getStyle() {
+    return {
+      ...theme.button,
+      ...(this.isDown && theme[`button--normal--down`]),
+    }
+  }
+
   draw(gameContext) {
     super.draw(gameContext, () => {
       const { ctx } = gameContext
       ctx.beginPath()
       this.setOutline(gameContext)
 
-      ctx.fillStyle = this.isDown ? theme.button.down.backgroundColor : theme.button.backgroundColor
-      ctx.lineWidth = theme.button.borderWidth;
+      const style = this.getStyle()
+
+      ctx.fillStyle = style.backgroundColor
+      ctx.lineWidth = style.borderWidth;
       ctx.fill()
 
-      ctx.strokeStyle = this.isDown ? theme.button.down.borderColor : theme.button.borderColor
+      ctx.strokeStyle = style.borderColor
       ctx.stroke();
 
-      ctx.strokeStyle = this.isDown ? theme.button.down.textColor : theme.button.textColor
+      ctx.strokeStyle = style.textColor
       this.setFont(ctx)
       ctx.strokeText(this.text, 0, this.textYOffset)
     })

@@ -5,10 +5,25 @@ export default {
     borderColor: "#444",
     backgroundColor: "#eee",
     textColor: "#000",
-    down: {
-      borderColor: "#C4C",
-      backgroundColor: "#C4C",
-      textColor: "#FFF",
-    }
-  }
+  },
+  'button--normal--down': {
+    borderColor: "#C4C",
+    backgroundColor: "#C4C",
+    textColor: "#FFF",
+  },
+  'button--enhanced': {
+    borderColor: "#C4C",
+    backgroundColor: "#C4C",
+    textColor: "#FFF",
+  },
+  'button--muted': {
+    borderColor: "#666",
+    backgroundColor: "#f4f4f4",
+    textColor: "#666",
+  },
+  'button--incorrect': {
+    borderColor: "#F66",
+    backgroundColor: "#F66",
+    textColor: "#FFF",
+  },
 }

@@ -63,7 +63,7 @@ export default class GameScreen extends ViewList {
     this.letterButtons.map((button) => button.disabled = true)
     this.moveToFront(button)
     const boxScale = Math.max(width, height) / (emphasizeScale * (button.size - theme.button.borderWidth))
-    button.renderDown = true
+    button.state = "enhanced"
 
     await Promise.all([
       playAudio(audioContext, assetLoader.pick('audio', 'success')),
@@ -90,7 +90,7 @@ export default class GameScreen extends ViewList {
     button.scaleY = 1
     button.opacity = 1
     button.boxScale = 1
-    button.renderDown = false
+    button.state = "normal"
 
     // We recalculate all button positions,
     // the screen size might have changed during the animation
@@ -107,8 +107,14 @@ export default class GameScreen extends ViewList {
   async handleIncorrectLetter(gameContext, button) {
     const { audioContext, animator, assetLoader, width } = gameContext
 
-    this.letterButtons.map((button) => button.disabled = true)
+    this.letterButtons.forEach((otherButton) => {
+      otherButton.disabled = true
+      if (otherButton !== button) {
+        otherButton.state = "muted"
+      }
+    })
     this.moveToFront(button)
+    button.state = "incorrect"
 
     await Promise.all([
       animator
@@ -144,7 +150,10 @@ export default class GameScreen extends ViewList {
         .tween({ scaleX: 1, scaleY: 1 }, 500, animator.easeInOutCubic)
         .start(),
     ])
-    this.letterButtons.map((button) => button.disabled = false)
+    this.letterButtons.map((button) => {
+      button.disabled = false
+      button.state = "normal"
+    })
   }
 
   pickCorrectLetter(gameContext) {

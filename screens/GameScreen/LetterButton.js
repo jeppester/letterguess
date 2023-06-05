@@ -10,6 +10,7 @@ export default class LetterButton extends Clickable {
     this.letter = letter
     this.onClick = onClick
     this.boxScale = 1
+    this.state = "normal"
   }
 
   setFont(ctx) {
@@ -26,13 +27,21 @@ export default class LetterButton extends Clickable {
   }
 
   setBoundingBoxPath(_gameContext, boundingBox) {
-    boundingBox.roundRect(-this.size / 2, -this.size / 2, this.size, this.size, theme.button.borderRadius);
+    const style = this.getStyle()
+
+    boundingBox.roundRect(-this.size / 2, -this.size / 2, this.size, this.size, style.borderRadius);
+  }
+
+  getStyle() {
+    return {
+      ...theme.button,
+      ...theme[`button--${this.state}`],
+      ...(this.isDown && theme[`button--${this.state}--down`]),
+    }
   }
 
   draw(gameContext) {
     super.draw(gameContext, () => {
-      const isDown = this.isDown || this.renderDown
-
       const { ctx } = gameContext
       ctx.beginPath();
       ctx.roundRect(
@@ -43,14 +52,16 @@ export default class LetterButton extends Clickable {
         theme.button.borderRadius
       );
 
-      ctx.fillStyle = isDown ? theme.button.down.backgroundColor : theme.button.backgroundColor
-      ctx.lineWidth = theme.button.borderWidth;
+      const style = this.getStyle()
+
+      ctx.fillStyle = style.backgroundColor
+      ctx.lineWidth = style.borderWidth;
       ctx.fill()
 
-      ctx.strokeStyle = isDown ? theme.button.down.borderColor : theme.button.borderColor
+      ctx.strokeStyle = style.borderColor
       ctx.stroke();
 
-      ctx.fillStyle = isDown ? theme.button.down.textColor : theme.button.textColor
+      ctx.fillStyle = style.textColor
       this.setFont(ctx)
       ctx.fillText(this.letter, 0, this.textYOffset)
     })
