@@ -121,10 +121,10 @@ export default class GameScreen extends ViewList {
         .animate(button)
         .tween({ scaleX: 1.5, scaleY: 1.5 }, 500, animator.easeInOutCubic)
         .start(),
-      playAudio(audioContext, assetLoader.pick('audio', 'failure.before-incorrect'))
+      playAudio(audioContext, assetLoader.pick('audio', 'failure/before-incorrect'))
         .then(() => animator.delay(300))
         .then(() => Promise.all([
-          playAudio(audioContext, assetLoader.audio[`letters.${button.letter}`]),
+          playAudio(audioContext, assetLoader.pick('audio', `letters/${button.letter}`)),
           animator
             .animate(button)
             .wait(200)
@@ -134,7 +134,7 @@ export default class GameScreen extends ViewList {
             .start(),
         ]))
         .then(() => animator.delay(300))
-        .then(() => playAudio(audioContext, assetLoader.pick('audio', 'failure.before-correct')))
+        .then(() => playAudio(audioContext, assetLoader.pick('audio', 'failure/before-correct')))
     ])
 
     await Promise.all([
@@ -164,7 +164,7 @@ export default class GameScreen extends ViewList {
       this.playCurrentLetter(gameContext)
     })
 
-    return playAudio(audioContext, assetLoader.audio[`letters.${this.correctLetter}`])
+    return playAudio(audioContext, assetLoader.pick('audio', `letters/${this.correctLetter}`))
   }
 
   cancelLetterPlaybackTimer({ animator }) {
