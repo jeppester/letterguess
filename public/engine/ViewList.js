@@ -19,6 +19,10 @@ export default class ViewList {
     this.children.forEach(...args)
   }
 
+  empty() {
+    this.children = []
+  }
+
   removeChild(child) {
     this.children = this.children.filter(other => other !== child)
   }

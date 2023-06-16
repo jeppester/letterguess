@@ -26,4 +26,7 @@ export default {
     backgroundColor: "#F66",
     textColor: "#FFF",
   },
+  letterListItem: {
+    textColor: "#444",
+  }
 }

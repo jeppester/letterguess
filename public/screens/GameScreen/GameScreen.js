@@ -1,5 +1,6 @@
 import ViewList from '../../engine/ViewList.js'
 import LetterButton from './LetterButton.js'
+import LetterList from './LetterList.js'
 import spliceRandom from '../../utils/spliceRandom.js'
 import playAudio from '../../utils/playAudio.js'
 import theme from '../../consts/theme.js'
@@ -11,6 +12,8 @@ export default class GameScreen extends ViewList {
   }
 
   startGame(gameContext) {
+    this.empty()
+
     this.padding = 20
     this.letterButtons = []
     this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"]
@@ -22,8 +25,9 @@ export default class GameScreen extends ViewList {
       this.letterButtons.push(new LetterButton({ letter, onClick, position }))
     }
 
-    this.push(...this.letterButtons)
-    this.resizeLetters(gameContext)
+    this.letterList = new LetterList()
+    this.push(...this.letterButtons, this.letterList)
+    this.resize(gameContext)
 
     const { animator } = gameContext
     const delays = [0, 200, 100]
@@ -44,7 +48,7 @@ export default class GameScreen extends ViewList {
 
   handleEvent({ gameContext, event }) {
     if (event.type == "resize") {
-      this.resizeLetters(gameContext)
+      this.resize(gameContext)
     }
     super.handleEvent({ gameContext, event })
   }
@@ -66,6 +70,9 @@ export default class GameScreen extends ViewList {
 
     this.letterButtons.map((button) => button.disabled = true)
     this.moveToFront(button)
+    this.moveToFront(this.letterList)
+    this.letterList.add(gameContext, button.letter)
+
     const boxScale = Math.max(width, height) / (emphasizeScale * (button.size - theme.button.borderWidth))
     button.state = "enhanced"
 
@@ -91,7 +98,7 @@ export default class GameScreen extends ViewList {
 
     // We recalculate all button positions,
     // the screen size might have changed during the animation
-    this.resizeLetters(gameContext)
+    this.resize(gameContext)
 
     const nextLetter = spliceRandom(this.availableLetters)
     if (nextLetter) {
@@ -130,6 +137,7 @@ export default class GameScreen extends ViewList {
       }
     })
     this.moveToFront(button)
+    this.moveToFront(this.letterList)
     button.state = "incorrect"
 
     await Promise.all([
@@ -198,12 +206,13 @@ export default class GameScreen extends ViewList {
     animator.cancelKey('current-letter-payback')
   }
 
-  resizeLetters(gameContext) {
+  resize(gameContext) {
     this.x = gameContext.width / 2
     this.y = gameContext.height / 2
 
     const isLandScape = gameContext.width > gameContext.height
     const maxTotalSize = 600
+    this.letterList.resize(gameContext)
 
     if (isLandScape) {
       const maxSpace = Math.min(gameContext.width, maxTotalSize)
