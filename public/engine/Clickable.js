@@ -66,6 +66,7 @@ export default class Clickable extends View {
   }
 
   handlePointerUp(gameContext, event) {
+    if (!this.disabled) return
     if (!this.clickInProgress) return
     if (event.pointerId !== this.pointerId) return
 
