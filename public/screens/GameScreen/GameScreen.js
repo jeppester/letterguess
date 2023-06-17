@@ -84,8 +84,9 @@ export default class GameScreen extends ViewList {
           y: 0,
           scaleX: emphasizeScale,
           scaleY: emphasizeScale,
+          rotation: { from: -360, to: 0 },
           boxScale
-        }, 400, animator.easeOutCubic)
+        }, 400, animator.easeInOutCubic)
         .start()
     ]).then(() =>
       animator
