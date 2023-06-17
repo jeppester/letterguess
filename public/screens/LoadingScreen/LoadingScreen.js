@@ -129,6 +129,22 @@ export default class LoadingScreen extends ViewList {
         "failure/before-incorrect/taet-paa-men-det-var": "/audio/failure/before-incorrect/taet-paa-men-det-var.mp3",
         "failure/before-incorrect/ups-det-var-et": "/audio/failure/before-incorrect/ups-det-var-et.mp3",
         "failure/before-incorrect/vups-det-var": "/audio/failure/before-incorrect/vups-det-var.mp3",
+        "failure/before-incorrect/aaah-nedtur-det-var-et.mp3": "/audio/failure/before-incorrect/aaah-nedtur-det-var-et.mp3",
+        "failure/before-incorrect/aaarh-pokkers-det-var-et.mp3": "/audio/failure/before-incorrect/aaarh-pokkers-det-var-et.mp3",
+        "failure/before-incorrect/aah-soerens-det-var-et.mp3": "/audio/failure/before-incorrect/aah-soerens-det-var-et.mp3",
+        "failure/before-incorrect/aarh-fedt-bogstav-men-det-var-nu-et.mp3": "/audio/failure/before-incorrect/aarh-fedt-bogstav-men-det-var-nu-et.mp3",
+        "failure/before-incorrect/aarh-pokkers-det-var-et.mp3": "/audio/failure/before-incorrect/aarh-pokkers-det-var-et.mp3",
+        "failure/before-incorrect/aarh-proev-igen-det-var-et.mp3": "/audio/failure/before-incorrect/aarh-proev-igen-det-var-et.mp3",
+        "failure/before-incorrect/aarh-taet-paa-det-var-et.mp3": "/audio/failure/before-incorrect/aarh-taet-paa-det-var-et.mp3",
+        "failure/before-incorrect/aha-bussemand-det-var-et.mp3": "/audio/failure/before-incorrect/aha-bussemand-det-var-et.mp3",
+        "failure/before-incorrect/arh-for-daelen-det-var-et.mp3": "/audio/failure/before-incorrect/arh-for-daelen-det-var-et.mp3",
+        "failure/before-incorrect/arh-oev-det-var-et.mp3": "/audio/failure/before-incorrect/arh-oev-det-var-et.mp3",
+        "failure/before-incorrect/bussemand-det-var-et.mp3": "/audio/failure/before-incorrect/bussemand-det-var-et.mp3",
+        "failure/before-incorrect/for-daelen-det-var-et.mp3": "/audio/failure/before-incorrect/for-daelen-det-var-et.mp3",
+        "failure/before-incorrect/ih-for-hulen-det-var-et-2.mp3": "/audio/failure/before-incorrect/ih-for-hulen-det-var-et-2.mp3",
+        "failure/before-incorrect/ih-for-hulen-det-var-et.mp3": "/audio/failure/before-incorrect/ih-for-hulen-det-var-et.mp3",
+        "failure/before-incorrect/ih-for-snoevsen-da-det-var-et.mp3": "/audio/failure/before-incorrect/ih-for-snoevsen-da-det-var-et.mp3",
+        "failure/before-incorrect/oev-det-var-et.mp3": "/audio/failure/before-incorrect/oev-det-var-et.mp3",
       }
     }, this.onProgress.bind(this, gameContext))
   }
