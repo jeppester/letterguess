@@ -6,6 +6,7 @@ export default class LetterListItem extends View {
     super()
 
     this.letter = letter
+    this.opacity = theme.letterListItem.opacity
   }
 
   draw(gameContext) {

@@ -18,6 +18,7 @@ export default class GameScreen extends ViewList {
     this.letterButtons = []
     this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"]
 
+    this.letterList = new LetterList(this.availableLetters.slice())
     for (let i = 0; i < 3; i ++) {
       let letter = spliceRandom(this.availableLetters)
       let position = i
@@ -25,7 +26,6 @@ export default class GameScreen extends ViewList {
       this.letterButtons.push(new LetterButton({ letter, onClick, position }))
     }
 
-    this.letterList = new LetterList()
     this.push(...this.letterButtons, this.letterList)
     this.resize(gameContext)
 
@@ -185,6 +185,7 @@ export default class GameScreen extends ViewList {
   pickCorrectLetter(gameContext) {
     const currentLetters = this.letterButtons.map(({ letter }) => letter)
     this.correctLetter = currentLetters[Math.floor(Math.random() * currentLetters.length)]
+    console.log(this.correctLetter)
 
     this.letterPlaybackTimer = gameContext.animator.delay(300).then(() => {
       this.playCurrentLetter(gameContext)
