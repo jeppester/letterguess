@@ -66,7 +66,6 @@ export default class Clickable extends View {
   }
 
   handlePointerUp(gameContext, event) {
-    if (!this.disabled) return
     if (!this.clickInProgress) return
     if (event.pointerId !== this.pointerId) return
 
@@ -84,7 +83,7 @@ export default class Clickable extends View {
     ctx.resetTransform()
 
     this.handleDownStateChange?.call(this, gameContext, event)
-    if (wasClicked) {
+    if (wasClicked && !this.disabled) {
       this.handleClick(gameContext, event)
     }
   }
