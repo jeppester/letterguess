@@ -6,7 +6,6 @@ export default class StartButton extends Clickable {
     super()
 
     this.onClick = onClick
-    this.text = "▶"
     this.resize(gameContext)
   }
 
@@ -17,27 +16,11 @@ export default class StartButton extends Clickable {
     super.handleEvent({ gameContext, event })
   }
 
-  resize({ ctx, width, height }) {
+  resize({ width, height }) {
     this.x = width / 2
     this.y = height / 2
 
     this.size = Math.max(width * .3, 200)
-
-    this.updateTextOffset({ ctx })
-  }
-
-  setFont(ctx) {
-    ctx.textAlign = 'center'
-    ctx.lineWidth = this.size * .07
-    ctx.font = `${this.size * .8}px Arial`;
-}
-
-  updateTextOffset({ ctx }) {
-    ctx.save()
-    this.setFont(ctx)
-    const textMeasure = ctx.measureText(this.text);
-    this.textYOffset = (textMeasure.actualBoundingBoxAscent - textMeasure.actualBoundingBoxDescent) / 2
-    ctx.restore()
   }
 
   setBoundingBoxPath(gameContext, boundingBox) {
@@ -72,9 +55,18 @@ export default class StartButton extends Clickable {
       ctx.strokeStyle = style.borderColor
       ctx.stroke();
 
-      ctx.strokeStyle = style.textColor
-      this.setFont(ctx)
-      ctx.strokeText(this.text, 0, this.textYOffset)
+      ctx.textAlign = 'center'
+      ctx.textBaseline = "middle"
+      ctx.fillStyle = style.textColor
+      ;[
+        ["G", -.21,-.2, .5],
+        ["T", .21,-.2, .5],
+        ["B", -.21,.25, .5],
+        ["S", .21,.25, .5],
+      ].forEach(([letter, offsetX, offsetY, sizeMultiplier]) => {
+        ctx.font = `${this.size * sizeMultiplier}px Arial`;
+        ctx.fillText(letter, offsetX * this.size, offsetY * this.size)
+      })
     })
   }
 
