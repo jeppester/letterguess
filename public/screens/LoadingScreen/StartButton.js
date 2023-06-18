@@ -2,25 +2,12 @@ import Clickable from '../../engine/Clickable.js'
 import theme from '../../consts/theme.js'
 
 export default class StartButton extends Clickable {
-  constructor(gameContext, onClick) {
+  constructor(onClick, letters) {
     super()
 
     this.onClick = onClick
-    this.resize(gameContext)
-  }
-
-  handleEvent({ gameContext, event }) {
-    if (event.type == "resize") {
-      this.resize(gameContext)
-    }
-    super.handleEvent({ gameContext, event })
-  }
-
-  resize({ width, height }) {
-    this.x = width / 2
-    this.y = height / 2
-
-    this.size = Math.max(width * .3, 200)
+    this.size = 0
+    this.letters = [...letters]
   }
 
   setBoundingBoxPath(gameContext, boundingBox) {
@@ -59,13 +46,13 @@ export default class StartButton extends Clickable {
       ctx.textBaseline = "middle"
       ctx.fillStyle = style.textColor
       ;[
-        ["G", -.21,-.2, .5],
-        ["T", .21,-.2, .5],
-        ["B", -.21,.25, .5],
-        ["S", .21,.25, .5],
-      ].forEach(([letter, offsetX, offsetY, sizeMultiplier]) => {
+        [-.21,-.2, .5],
+        [.21,-.2, .5],
+        [-.21,.25, .5],
+        [.21,.25, .5],
+      ].forEach(([offsetX, offsetY, sizeMultiplier], index) => {
         ctx.font = `${this.size * sizeMultiplier}px Arial`;
-        ctx.fillText(letter, offsetX * this.size, offsetY * this.size)
+        ctx.fillText(this.letters[index], offsetX * this.size, offsetY * this.size)
       })
     })
   }

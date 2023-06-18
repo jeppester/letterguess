@@ -5,7 +5,7 @@ import spliceRandom from '../../utils/spliceRandom.js'
 import playAudio from '../../utils/playAudio.js'
 import theme from '../../consts/theme.js'
 
-export default class RandomModeScreen extends ViewList {
+export default class AlphabeticalModeScreen extends ViewList {
   constructor(gameContext) {
     super()
     this.startGame(gameContext)
@@ -17,10 +17,12 @@ export default class RandomModeScreen extends ViewList {
     this.padding = 20
     this.letterButtons = []
     this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"]
+    this.allLetters = this.availableLetters.slice()
 
     this.letterList = new LetterList(this.availableLetters.slice())
+    const initialLetters = this.pickButtonLetters()
     for (let i = 0; i < 3; i ++) {
-      let letter = spliceRandom(this.availableLetters)
+      let letter = initialLetters[i]
       let position = i
       let onClick = this.handleLetterClick.bind(this, gameContext)
       this.letterButtons.push(new LetterButton({ letter, onClick, position }))
@@ -39,8 +41,7 @@ export default class RandomModeScreen extends ViewList {
         .wait(delays[i])
         .tween({ scaleX: { to: 1 }}, 300, animator.easeOutCubic)
         .start(() => {
-          // Pick correct letter, but only once
-          if (i === 0) this.pickCorrectLetter(gameContext)
+          if (i === 0) this.loopCorrectLetterSound(gameContext)
           button.disabled = false
         })
     })
@@ -56,7 +57,7 @@ export default class RandomModeScreen extends ViewList {
   handleLetterClick(gameContext, button) {
     this.cancelLetterPlaybackTimer(gameContext)
 
-    if (button.letter === this.correctLetter) {
+    if (button.letter === this.availableLetters[0]) {
       this.handleCorrectLetter(gameContext, button)
     }
     else {
@@ -76,8 +77,15 @@ export default class RandomModeScreen extends ViewList {
     const boxScale = Math.max(width, height) / (emphasizeScale * (button.size - theme.button.borderWidth))
     button.state = "enhanced"
 
+    const otherButtons = this.letterButtons.filter(otherButton => otherButton !== button)
+
     await Promise.all([
       playAudio(audioContext, assetLoader.pick('audio', 'success')),
+      ...otherButtons.map(otherButton => animator
+        .animate(otherButton)
+        .tween({ scaleX: 0 }, 400, animator.easeInOutCubic)
+        .start()
+      ),
       animator.animate(button)
         .tween({
           x: 0,
@@ -88,40 +96,39 @@ export default class RandomModeScreen extends ViewList {
           boxScale
         }, 400, animator.easeInOutCubic)
         .start()
-    ]).then(() =>
-      animator
-        .animate(button)
-        .wait(200)
-        .tween({ opacity: 0, scaleX: 6, scaleY: 6 }, 300, animator.easeOutCubic)
-        .wait(200)
-        .start()
-    )
+    ])
 
-    // We recalculate all button positions,
-    // the screen size might have changed during the animation
+    await animator
+      .animate(button)
+      .wait(200)
+      .tween({ opacity: 0, scaleX: 6, scaleY: 6 }, 300, animator.easeOutCubic)
+      .wait(200)
+      .start()
+
     this.resize(gameContext)
+    this.availableLetters.shift()
+    if (this.availableLetters.length > 0) {
+      const nextLetters = this.pickButtonLetters()
 
-    const nextLetter = spliceRandom(this.availableLetters)
-    if (nextLetter) {
-      button.letter = nextLetter
-      button.updateTextOffset(gameContext)
-      button.scaleY = 1
-      button.opacity = 1
-      button.boxScale = 1
-      button.state = "normal"
+      this.letterButtons.map((button, i) => {
+        button.letter = nextLetters[i]
+        button.updateTextOffset(gameContext)
+        button.scaleX = 0
+        button.scaleY = 1
+        button.opacity = 1
+        button.boxScale = 1
+        button.disabled = true
+        button.state = "normal"
 
-      await animator.animate(button)
-        .tween({ scaleX: { from: 0, to: 1 }}, 300, animator.easeInOutCubic)
-        .start()
-    }
-    else {
-      this.removeChild(button)
-      this.letterButtons.splice(this.letterButtons.indexOf(button), 1)
-    }
-
-    if (this.letterButtons.length !== 0) {
-      this.pickCorrectLetter(gameContext)
-      this.letterButtons.map((button) => button.disabled = false)
+        const delays = [0, 200, 100]
+        animator.animate(button)
+          .wait(delays[i])
+          .tween({ scaleX: { to: 1 }}, 300, animator.easeOutCubic)
+          .start(() => {
+            if (i === 0) this.loopCorrectLetterSound(gameContext)
+            button.disabled = false
+          })
+      })
     }
     else {
       this.startGame(gameContext)
@@ -183,11 +190,24 @@ export default class RandomModeScreen extends ViewList {
     })
   }
 
-  pickCorrectLetter(gameContext) {
-    const currentLetters = this.letterButtons.map(({ letter }) => letter)
-    this.correctLetter = currentLetters[Math.floor(Math.random() * currentLetters.length)]
-    console.log(this.correctLetter)
+  pickButtonLetters() {
+    const pool = [this.availableLetters[0]]
+    while (pool.length < 3) {
+      const randomLetter = this.allLetters[Math.floor(Math.random() * this.allLetters.length)]
+      if (pool.includes(randomLetter)) continue
 
+      pool.push(randomLetter)
+    }
+
+    const shuffled = []
+    while(pool.length) {
+      shuffled.push(spliceRandom(pool))
+    }
+
+    return shuffled
+  }
+
+  loopCorrectLetterSound(gameContext) {
     this.letterPlaybackTimer = gameContext.animator.delay(300).then(() => {
       this.playCurrentLetter(gameContext)
     })
@@ -201,7 +221,7 @@ export default class RandomModeScreen extends ViewList {
       this.playCurrentLetter(gameContext)
     })
 
-    return playAudio(audioContext, assetLoader.pick('audio', `letters/${this.correctLetter}`))
+    return playAudio(audioContext, assetLoader.pick('audio', `letters/${this.availableLetters[0]}`))
   }
 
   cancelLetterPlaybackTimer({ animator }) {
