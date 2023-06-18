@@ -4,6 +4,7 @@ import LetterList from './LetterList.js'
 import spliceRandom from '../../utils/spliceRandom.js'
 import playAudio from '../../utils/playAudio.js'
 import theme from '../../consts/theme.js'
+import ModeSelectionScreen from '../ModeSelectionScreen/ModeSelectionScreen.js'
 
 export default class RandomModeScreen extends ViewList {
   constructor(gameContext) {
@@ -124,7 +125,7 @@ export default class RandomModeScreen extends ViewList {
       this.letterButtons.map((button) => button.disabled = false)
     }
     else {
-      this.startGame(gameContext)
+      this.endGame(gameContext)
     }
   }
 
@@ -206,6 +207,11 @@ export default class RandomModeScreen extends ViewList {
 
   cancelLetterPlaybackTimer({ animator }) {
     animator.cancelKey('current-letter-payback')
+  }
+
+  endGame(gameContext) {
+    gameContext.mainViewList.removeChild(this)
+    gameContext.mainViewList.push(new ModeSelectionScreen(gameContext))
   }
 
   resize(gameContext) {
