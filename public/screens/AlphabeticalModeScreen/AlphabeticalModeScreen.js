@@ -20,7 +20,7 @@ export default class AlphabeticalModeScreen extends ViewList {
     this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"]
     this.allLetters = this.availableLetters.slice()
 
-    this.letterList = new LetterList(this.availableLetters.slice())
+    this.letterList = new LetterList()
     const initialLetters = this.pickButtonLetters()
     for (let i = 0; i < 3; i ++) {
       let letter = initialLetters[i]
