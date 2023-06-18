@@ -5,7 +5,7 @@ import spliceRandom from '../../utils/spliceRandom.js'
 import playAudio from '../../utils/playAudio.js'
 import theme from '../../consts/theme.js'
 
-export default class GameScreen extends ViewList {
+export default class RandomModeScreen extends ViewList {
   constructor(gameContext) {
     super()
     this.startGame(gameContext)

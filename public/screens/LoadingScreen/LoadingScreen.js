@@ -1,5 +1,5 @@
 import ViewList from '../../engine/ViewList.js'
-import GameScreen from '../GameScreen/GameScreen.js'
+import RandomModeScreen from '../RandomModeScreen/RandomModeScreen.js'
 import ProgressBar from './ProgressBar.js'
 import StartButton from './StartButton.js'
 import assets from './assets.js'
@@ -54,7 +54,7 @@ export default class LoadingScreen extends ViewList {
       .wait(500)
       .start(() => {
         gameContext.mainViewList.removeChild(this)
-        gameContext.mainViewList.push(new GameScreen(gameContext))
+        gameContext.mainViewList.push(new RandomModeScreen(gameContext))
       })
   }
 }
