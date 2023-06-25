@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="182.44315mm"
+   height="207.07452mm"
+   viewBox="0 0 182.44314 207.07453"
+   version="1.1"
+   id="svg15119"
+   sodipodi:docname="trophy-divided.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:export-filename="../public/images/trophy-silhouette.png"
+   inkscape:export-xdpi="509.35"
+   inkscape:export-ydpi="509.35"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview15121"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.87259603"
+     inkscape:cx="261.8623"
+     inkscape:cy="342.6557"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2" />
+  <defs
+     id="defs15116">
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter1006"
+       x="-0.051674318"
+       y="-0.044813521"
+       width="1.1033486"
+       height="1.089627">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="3.4628393"
+         id="feGaussianBlur1008" />
+    </filter>
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Lag 2"
+     transform="translate(10.813831,10.810834)">
+    <g
+       id="g18630"
+       transform="translate(-14.438893,-15.045936)"
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter1006)"
+       inkscape:export-filename="../public/images/trophy-silhouette.svg"
+       inkscape:export-xdpi="509.35"
+       inkscape:export-ydpi="509.35">
+      <path
+         id="path18608"
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+         inkscape:transform-center-x="2.1414486"
+         inkscape:transform-center-y="1.8054281"
+         d="m 46.495367,15.045919 -1.71049,18.563208 -18.640723,-0.243396 13.447241,12.911357 -3.657658,4.46536 C 17.517903,52.48512 8.8979008,64.618298 18.243344,87.517981 c 9.610943,23.550249 23.003039,32.152459 45.187423,39.454959 1.499377,0.44586 -1.509985,3.71295 -1.509985,3.71295 l 1.757515,2.43913 c 0,0 2.18751,-1.93042 3.349667,-4.56458 l -0.0646,-0.10697 c 6.845314,10.37221 14.956374,17.03002 23.72465,18.64434 -0.04601,0.0347 -0.0708,0.0703 -0.0708,0.10697 v 31.69005 c -13.383259,0.1505 -23.617679,1.0481 -23.617679,2.14302 v 5.22914 c -3.016523,0.34768 -4.782138,0.76776 -4.782138,1.22215 v 10.84223 c 0,1.201 12.299971,2.16783 27.578679,2.16783 h 10.115661 c 15.278703,0 27.579193,-0.96683 27.579193,-2.16783 v -10.84223 c 0,-0.4805 -1.99274,-0.92192 -5.33352,-1.28054 v -5.17075 c 0,-1.09492 -10.23432,-1.99253 -23.617682,-2.14302 v -31.69005 c 0,-0.007 -0.0017,-0.0144 -0.0036,-0.0217 8.955042,-1.45503 17.239642,-8.16989 24.211962,-18.73477 l -0.0677,0.11214 c 1.16216,2.63417 3.34915,4.56458 3.34915,4.56458 l 1.75803,-2.43913 c 0,0 -3.00936,-3.26709 -1.50998,-3.71295 22.18439,-7.3025 35.57647,-15.90469 45.18742,-39.454959 10.40778,-25.502782 -1.46398,-37.654501 -24.3365,-36.969319 -1.99237,-0.697535 0.30938,-5.529068 1.30276,-6.443535 l -0.93379,-2.915067 c 0,0 -1.99316,0.422237 -3.63647,2.584855 l -0.006,0.180867 c 0.0188,-1.221265 0.0315,-2.446001 0.0315,-3.677295 -7.6e-4,-0.194713 -0.002,-0.389242 -0.003,-0.583943 -25.1069,-4.53724 -49.926619,-5.325679 -74.51225,-3.073198 L 73.507155,19.535051 57.927227,29.771635 Z m 97.019403,38.458634 -0.004,0.104904 c 1.11132,3.049534 5.06226,2.785363 9.78028,2.698026 20.7517,-0.384142 17.72265,17.066952 12.28711,32.124654 -11.0107,30.502113 -39.51645,34.537943 -39.51645,34.537943 l -0.009,0.015 c 9.42628,-17.01823 15.89202,-41.592949 17.46147,-69.480517 z m -112.440167,3.17035 -3.295923,4.024043 18.478458,-2.463415 0.407211,1.898075 c 2.159163,25.206221 8.353736,47.300674 17.059423,62.964634 l -0.07751,-0.12816 c 0,0 -28.505764,-4.03586 -39.516451,-34.537943 -4.913032,-13.61021 -7.858037,-29.174091 6.944796,-31.757234 z"
+         inkscape:export-filename="../public/images/trophy-silhouette.svg"
+         inkscape:export-xdpi="509.35"
+         inkscape:export-ydpi="509.35" />
+    </g>
+  </g>
+</svg>
