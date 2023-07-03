@@ -1,5 +1,6 @@
 import ViewList from '../../engine/ViewList.js'
 import LetterButton from '../../shared/LetterButton.js'
+import Trophy from '../../shared/Trophy.js'
 import LetterList from './LetterList.js'
 import spliceRandom from '../../utils/spliceRandom.js'
 import playAudio from '../../utils/playAudio.js'
@@ -16,10 +17,12 @@ export default class RandomModeScreen extends ViewList {
     this.empty()
 
     this.padding = 20
-    this.letterButtons = []
+    this.letterButtons = new ViewList()
     this.availableLetters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"]
 
     this.letterList = new LetterList(this.availableLetters.slice())
+    this.trophy = new Trophy(gameContext, this.letterList.length)
+
     for (let i = 0; i < 3; i ++) {
       let letter = spliceRandom(this.availableLetters)
       let position = i
@@ -27,7 +30,7 @@ export default class RandomModeScreen extends ViewList {
       this.letterButtons.push(new LetterButton({ letter, onClick, position }))
     }
 
-    this.push(...this.letterButtons, this.letterList)
+    this.push(this.letterButtons, this.letterList, this.trophy)
     this.resize(gameContext)
 
     const { animator } = gameContext
@@ -71,7 +74,6 @@ export default class RandomModeScreen extends ViewList {
 
     this.letterButtons.map((button) => button.disabled = true)
     this.moveToFront(button)
-    this.moveToFront(this.letterList)
     this.letterList.add(gameContext, button.letter)
 
     const boxScale = Math.max(width, height) / (emphasizeScale * (button.size - theme.button.borderWidth))
@@ -97,6 +99,8 @@ export default class RandomModeScreen extends ViewList {
         .wait(200)
         .start()
     )
+
+    await this.trophy.advance(gameContext)
 
     // We recalculate all button positions,
     // the screen size might have changed during the animation
@@ -139,7 +143,6 @@ export default class RandomModeScreen extends ViewList {
       }
     })
     this.moveToFront(button)
-    this.moveToFront(this.letterList)
     button.state = "incorrect"
 
     await Promise.all([

@@ -12,11 +12,19 @@ export default class ViewList {
   }
 
   push(...args) {
-    this.children.push(...args)
+    return this.children.push(...args)
   }
 
   forEach(...args) {
-    this.children.forEach(...args)
+    return this.children.forEach(...args)
+  }
+
+  map(...args) {
+    return this.children.map(...args)
+  }
+
+  filter(...args) {
+    return this.children.filter(...args)
   }
 
   empty() {
